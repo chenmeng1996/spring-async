@@ -10,7 +10,6 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.TreeMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -46,34 +45,41 @@ public class AsyncWithQueueController {
     @Component
     private class QueueListener {
 
-        private final QueueExecutor executor;
+        private final QueueExecutor queueExecutor;
 
         @PostConstruct
         public void init() {
-            executor.start();
+            queueExecutor.start();
         }
 
         @PreDestroy
         public void destroy() {
-
+            queueExecutor.stopNow();
         }
     }
 
     // 处理队列的后台线程
     @Component
     private class QueueExecutor extends Thread {
+
+        private boolean stopFlag = false;
+
         @Override
         public void run() {
-            while (true) {
+            while (stopFlag) {
                 try {
                     // 当队列空，阻塞等待
                     RequestVO<String, String> requestVO = queue.take();
                     // 启动异步线程执行（因为配置了线程池，实际上是提交到线程池）
                     asyncMethod.executeWithInput(requestVO.getResult(), requestVO.getParams());
                 } catch (InterruptedException e) {
-
+                    e.printStackTrace();
                 }
             }
+        }
+
+        public void stopNow() {
+            stopFlag = true;
         }
     }
 }

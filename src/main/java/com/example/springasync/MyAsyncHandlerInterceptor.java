@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 统一处理异步结果的拦截器，不是必须的
+ * 统一处理异步结果的拦截器
  */
 @Slf4j
 @Component

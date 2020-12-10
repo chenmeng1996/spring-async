@@ -1,5 +1,6 @@
 package com.example.springasync;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,12 +11,12 @@ import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+@RequiredArgsConstructor
 @Slf4j
 @Configuration
 public class AsyncConfiguration implements WebMvcConfigurer {
 
-    @Autowired
-    MyAsyncHandlerInterceptor myAsyncHandlerInterceptor;
+    private final MyAsyncHandlerInterceptor myAsyncHandlerInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
